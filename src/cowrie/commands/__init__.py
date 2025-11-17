@@ -32,6 +32,7 @@ __all__ = [
     "ifconfig",
     "iptables",
     "last",
+    "llm",
     "locate",
     "ls",
     "lspci",

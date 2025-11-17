@@ -158,7 +158,9 @@ class HoneyPotBaseProtocol(insults.TerminalProtocol, TimeoutMixin):
         if cmd[0] in (".", "/"):
             path = self.fs.resolve_path(cmd, self.cwd)
             if not self.fs.exists(path):
-                return None
+                # Try LLM cache for unknown path-based commands
+                from cowrie.commands.llm import Command_llm
+                return Command_llm
         else:
             for i in [f"{self.fs.resolve_path(x, self.cwd)}/{cmd}" for x in paths]:
                 if self.fs.exists(i):
@@ -166,7 +168,10 @@ class HoneyPotBaseProtocol(insults.TerminalProtocol, TimeoutMixin):
                     break
 
         if path is None:
-            return None
+            # Command not found in standard locations, try LLM cache
+            from cowrie.commands.llm import Command_llm
+            log.msg(f"Command not found, trying LLM cache: {cmd}")
+            return Command_llm
 
         try:
             resource_root = importlib.resources.files(data)
@@ -187,8 +192,10 @@ class HoneyPotBaseProtocol(insults.TerminalProtocol, TimeoutMixin):
         if path in self.commands:
             return self.commands[path]
 
-        log.msg(f"Can't find command {cmd}")
-        return None
+        # Final fallback: try LLM cache
+        from cowrie.commands.llm import Command_llm
+        log.msg(f"Can't find command {cmd}, trying LLM cache")
+        return Command_llm
 
     def lineReceived(self, line: bytes) -> None:
         """
