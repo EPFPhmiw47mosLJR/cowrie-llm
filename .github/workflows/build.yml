@@ -58,7 +58,7 @@ jobs:
 
       - name: Test
         run: |
-          docker run -d --rm cowrie:test
+          docker run -d --rm cowrie-llm:test
 
       - name: Push Container Image
         id: push
