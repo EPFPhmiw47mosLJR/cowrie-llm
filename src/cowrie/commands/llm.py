@@ -30,7 +30,7 @@ class Command_llm(HoneyPotCommand):
     """
 
     @defer.inlineCallbacks
-    def call(self) -> None:
+    def start(self) -> None:
         """
         Start the LLM command execution.
         Queries the LLM cache service and returns the response.
